@@ -5,7 +5,7 @@ export default function Home() {
     <main style={{ maxWidth: 600, margin: "0 auto" }}>
       <h1>Contact Form</h1>
       <p>
-        <small>Step 3</small>
+        <small>Step 4</small>
       </p>
       <hr />
       <ContactForm />
