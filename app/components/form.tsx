@@ -2,10 +2,14 @@
 
 import { useState } from "react";
 
+import Loader from "./loader";
+import { emailService } from "./support";
+
 export default function ContactForm() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [feedback, setFeedback] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const emailHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setEmail(event.target.value);
@@ -17,13 +21,25 @@ export default function ContactForm() {
     setMessage(event.target.value);
   };
 
-  const sendHandler = () => {
+  const sendHandler = async () => {
     if (email.length === 0 || message.length === 0) {
       setFeedback("Please fill in all the fields.");
       return;
     }
 
-    setFeedback("sending...");
+    setLoading(true);
+    setFeedback("");
+
+    await emailService(email, message)
+      .then(() => {
+        setFeedback("message sent");
+      })
+      .catch((error) => {
+        setFeedback(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -65,6 +81,9 @@ export default function ContactForm() {
         >
           Send
         </button>
+      </div>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        {loading && <Loader />}
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <div style={{ fontSize: 24 }}>{feedback}</div>
