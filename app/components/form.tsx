@@ -1,29 +1,64 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Loader from "./loader";
-import { emailService } from "./support";
+import { emailService, EMAIL_REGEX, MESSAGE_LENGTH } from "./support";
 
 export default function ContactForm() {
   const [email, setEmail] = useState("");
+  const [emailTouch, setEmailTouch] = useState(false);
+  const [emailValid, setEmailValid] = useState(false);
+
   const [message, setMessage] = useState("");
+  const [messageTouch, setMessageTouch] = useState(false);
+  const [messageValid, setMessageValid] = useState(false);
+
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
 
   const emailHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    if (!emailTouch) {
+      setEmailTouch(true);
+    }
+
     setEmail(event.target.value);
   };
 
   const messageHandler = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ): void => {
-    setMessage(event.target.value);
+    if (!messageTouch) {
+      setMessageTouch(true);
+    }
+
+    setMessage(event.target.value.slice(0, MESSAGE_LENGTH));
+  };
+
+  const resetForm = () => {
+    setEmail("");
+    setEmailTouch(false);
+    setEmailValid(false);
+
+    setMessage("");
+    setMessageTouch(false);
+    setMessageValid(false);
+
+    setTimeout(() => {
+      setFeedback("");
+    }, 4_000);
   };
 
   const sendHandler = async () => {
-    if (email.length === 0 || message.length === 0) {
-      setFeedback("Please fill in all the fields.");
+    if (!emailTouch) {
+      setEmailTouch(true);
+    }
+
+    if (!messageTouch) {
+      setMessageTouch(true);
+    }
+
+    if (!emailValid || !messageValid) {
       return;
     }
 
@@ -32,19 +67,60 @@ export default function ContactForm() {
 
     await emailService(email, message)
       .then(() => {
-        setFeedback("message sent");
+        setFeedback("message sent successfully");
+        resetForm();
       })
-      .catch((error) => {
-        setFeedback(error);
+      .catch(() => {
+        setFeedback("oops please try again");
       })
       .finally(() => {
         setLoading(false);
       });
   };
 
+  const getEmailBorder = () => {
+    if (!emailTouch) {
+      return;
+    }
+
+    if (!emailValid) {
+      return "red";
+    }
+
+    return "";
+  };
+
+  const getMessageBorder = () => {
+    if (!messageTouch) {
+      return;
+    }
+
+    if (!messageValid) {
+      return "red";
+    }
+
+    return "";
+  };
+
+  useEffect(() => {
+    if (!emailTouch) {
+      return;
+    }
+
+    setEmailValid(EMAIL_REGEX.test(email));
+  }, [email]);
+
+  useEffect(() => {
+    if (!messageTouch) {
+      return;
+    }
+
+    setMessageValid(!!message.length);
+  }, [message]);
+
   return (
     <>
-      <fieldset style={{ margin: "12px 0" }}>
+      <fieldset style={{ margin: "12px 0", borderColor: getEmailBorder() }}>
         <legend>* Email:</legend>
         <input
           style={{
@@ -56,7 +132,7 @@ export default function ContactForm() {
           value={email}
         />
       </fieldset>
-      <fieldset style={{ margin: "12px 0" }}>
+      <fieldset style={{ margin: "12px 0", borderColor: getMessageBorder() }}>
         <legend>* Message:</legend>
         <textarea
           style={{
@@ -68,6 +144,9 @@ export default function ContactForm() {
           onChange={messageHandler}
           value={message}
         />
+        <div style={{ textAlign: "right" }}>
+          {message.length} / {MESSAGE_LENGTH}
+        </div>
       </fieldset>
       <div style={{ margin: "12px 0" }}>
         <button
@@ -78,6 +157,7 @@ export default function ContactForm() {
             cursor: "pointer",
           }}
           onClick={sendHandler}
+          disabled={loading}
         >
           Send
         </button>
@@ -86,7 +166,14 @@ export default function ContactForm() {
         {loading && <Loader />}
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <div style={{ fontSize: 24 }}>{feedback}</div>
+        <div
+          style={{
+            fontSize: 24,
+            color: feedback.includes("successfully") ? "green" : "red",
+          }}
+        >
+          {feedback}
+        </div>
       </div>
     </>
   );
