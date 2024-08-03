@@ -45,7 +45,8 @@ export default function ContactForm() {
   return (
     <>
       <fieldset style={{ margin: "12px 0" }}>
-        <legend>* Email:</legend>
+        <legend>Say Hi</legend>
+        <label style={{ marginTop: 20, display: "block" }}>* Email:</label>
         <input
           style={{
             width: "calc(100% - 16px)",
@@ -55,9 +56,8 @@ export default function ContactForm() {
           onChange={emailHandler}
           value={email}
         />
-      </fieldset>
-      <fieldset style={{ margin: "12px 0" }}>
-        <legend>* Message:</legend>
+
+        <label style={{ marginTop: 20, display: "block" }}>* Message:</label>
         <textarea
           style={{
             width: "calc(100% - 16px)",
