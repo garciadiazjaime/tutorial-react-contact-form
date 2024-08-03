@@ -1,5 +1,7 @@
 # Building a Contact Form in React
 
+[https://demo.garciadiazjaime.com/react-contact-form](https://demo.garciadiazjaime.com/react-contact-form)
+
 When working on a web application, a contact form is often required. While seemingly simple, it can quickly become complex.
 
 A **Contact Form** requires:
@@ -14,7 +16,7 @@ A **Contact Form** requires:
 
 ## Demo
 
-I created a simple demo of a contact form using:
+I created a simple [demo](https://demo.garciadiazjaime.com/react-contact-form) of a contact form using:
 
 - **React + Next.js**: To build a static website, hosted for free on Netlify.
 - **Lambda Function**: The client app uses a lambda as a proxy, also deployed for free on Netlify.
