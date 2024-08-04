@@ -78,7 +78,7 @@ export default function ContactForm() {
       });
   };
 
-  const getEmailBorder = () => {
+  const getEmailColor = () => {
     if (!emailTouch) {
       return;
     }
@@ -90,7 +90,7 @@ export default function ContactForm() {
     return "";
   };
 
-  const getMessageBorder = () => {
+  const getMessageColor = () => {
     if (!messageTouch) {
       return;
     }
@@ -120,8 +120,13 @@ export default function ContactForm() {
 
   return (
     <>
-      <fieldset style={{ margin: "12px 0", borderColor: getEmailBorder() }}>
-        <legend>* Email:</legend>
+      <fieldset style={{ margin: "12px 0" }}>
+        <legend>Say Hi</legend>
+        <label
+          style={{ marginTop: 20, display: "block", color: getEmailColor() }}
+        >
+          * Email:
+        </label>
         <input
           style={{
             width: "calc(100% - 16px)",
@@ -131,9 +136,12 @@ export default function ContactForm() {
           onChange={emailHandler}
           value={email}
         />
-      </fieldset>
-      <fieldset style={{ margin: "12px 0", borderColor: getMessageBorder() }}>
-        <legend>* Message:</legend>
+
+        <label
+          style={{ marginTop: 20, display: "block", color: getMessageColor() }}
+        >
+          * Message:
+        </label>
         <textarea
           style={{
             width: "calc(100% - 16px)",
