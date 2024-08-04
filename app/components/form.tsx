@@ -3,7 +3,6 @@
 import { useState } from "react";
 
 import Loader from "./loader";
-import { emailService } from "./support";
 
 export default function ContactForm() {
   const [email, setEmail] = useState("");
@@ -30,16 +29,10 @@ export default function ContactForm() {
     setLoading(true);
     setFeedback("");
 
-    await emailService(email, message)
-      .then(() => {
-        setFeedback("message sent");
-      })
-      .catch((error) => {
-        setFeedback(error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    setTimeout(() => {
+      setLoading(false);
+      setFeedback("message sent");
+    }, 2_000);
   };
 
   return (
