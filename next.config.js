@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
+require("dotenv/config");
+
 const nextConfig = {
   output: "export",
-  basePath: "/react-contact-form",
+  basePath: process.env.BASE_PATH,
 };
 
 module.exports = nextConfig;
