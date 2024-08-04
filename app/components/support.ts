@@ -1,4 +1,3 @@
-import config from "@/next.config";
 export const MESSAGE_LENGTH = 240;
 export const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
@@ -27,11 +26,14 @@ export const emailService = async (
     return Promise.reject("DATA_INVALID");
   }
 
-  await fetch(`${config.basePath}/.netlify/functions/send-form`, {
-    method: "POST",
-    body: JSON.stringify({
-      email: sanitize(email),
-      message: sanitize(message),
-    }),
-  });
+  await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_PATH}/.netlify/functions/send-form`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        email: sanitize(email),
+        message: sanitize(message),
+      }),
+    }
+  );
 };
